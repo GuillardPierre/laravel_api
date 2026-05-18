@@ -55,7 +55,7 @@ class BookController extends Controller
                 'required',
                 'string',
                 'size:13',
-                Rule::unique('books', 'isbn'),
+                Rule::unique('books', 'isbn')->ignore($book->id),
             ],
         ]);
 
