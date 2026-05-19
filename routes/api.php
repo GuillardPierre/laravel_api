@@ -14,7 +14,9 @@ Route::get('/ping', function () {
 });
 
 Route::post('/register', [UserController::class, 'register']);
-Route::post('/login', [UserController::class, 'login']);
+Route::middleware('throttle:10,1,')->group(function () {
+    Route::post('/login', [UserController::class, 'login']);
+});
 
 Route::get('/books', [BookController::class, 'index']);
 Route::get('/books/{book}', [BookController::class, 'show']);
