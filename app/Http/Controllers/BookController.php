@@ -74,6 +74,7 @@ class BookController extends Controller
         ]);
 
         $book->update($data);
+        Cache::forget('book-' . $book->id);
 
         return new BookResource($book);
     }
@@ -83,6 +84,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        Cache::forget('book-' . $book->id);
         $book->delete();
 
         return response()->noContent();
