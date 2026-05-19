@@ -18,13 +18,22 @@ Route::middleware('throttle:10,1,')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
 });
 
-Route::get('/books', [BookController::class, 'index']);
-Route::get('/books/{book}', [BookController::class, 'show']);
+Route::name('books.')->group(function () {
+    Route::get('/books', [BookController::class, 'index'])->name('index');
+    Route::get('/books/{book}', [BookController::class, 'show'])->name('show');
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [UserController::class, 'logout']);
-    Route::post('/books', [BookController::class, 'store']);
-    Route::put('/books/{book}', [BookController::class, 'update']);
-    Route::patch('/books/{book}', [BookController::class, 'update']);
-    Route::delete('/books/{book}', [BookController::class, 'destroy']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [UserController::class, 'logout']);
+        Route::post('/books', [BookController::class, 'store'])->name('store');
+        Route::put('/books/{book}', [BookController::class, 'update'])->name(
+            'update',
+        );
+        Route::patch('/books/{book}', [BookController::class, 'update'])->name(
+            'update',
+        );
+        Route::delete('/books/{book}', [
+            BookController::class,
+            'destroy',
+        ])->name('destroy');
+    });
 });
