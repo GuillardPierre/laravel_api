@@ -1,0 +1,469 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel API",
+        "description": "Documentation API pour le projet Laravel API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/books": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Liste des livres",
+                "description": "Récupère la liste paginée de tous les livres.",
+                "operationId": "a9d13283dfab262e97af3c914d51b7a8",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succès : Liste des livres",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Livre Test"
+                                                    },
+                                                    "author": {
+                                                        "type": "string",
+                                                        "example": "Auteur Test"
+                                                    },
+                                                    "summary": {
+                                                        "type": "string",
+                                                        "example": "Description de test pour ce livre."
+                                                    },
+                                                    "isbn": {
+                                                        "type": "string",
+                                                        "example": "1234567890123"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Créer un livre",
+                "description": "Ajoute un nouveau livre à la base de données.",
+                "operationId": "47047e95a700b3271b697e57d0965191",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "author",
+                                    "summary",
+                                    "isbn"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Livre Test"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Auteur Test"
+                                    },
+                                    "summary": {
+                                        "type": "string",
+                                        "example": "Description de test pour ce livre."
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "1234567890123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Succès : Livre créé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Livre Test"
+                                                },
+                                                "author": {
+                                                    "type": "string",
+                                                    "example": "Auteur Test"
+                                                },
+                                                "summary": {
+                                                    "type": "string",
+                                                    "example": "Description de test pour ce livre."
+                                                },
+                                                "isbn": {
+                                                    "type": "string",
+                                                    "example": "1234567890123"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur : Non autorisé (Token manquant ou invalide)"
+                    },
+                    "422": {
+                        "description": "Erreur : Données invalides (Validation)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/books/{book}": {
+            "get": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Afficher un livre",
+                "description": "Récupère les informations d'un livre spécifique.",
+                "operationId": "d8bbccd69b954f8a92bd6c3292b15842",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "description": "ID du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succès : Informations du livre",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Livre Test"
+                                                },
+                                                "author": {
+                                                    "type": "string",
+                                                    "example": "Auteur Test"
+                                                },
+                                                "summary": {
+                                                    "type": "string",
+                                                    "example": "Description de test pour ce livre."
+                                                },
+                                                "isbn": {
+                                                    "type": "string",
+                                                    "example": "1234567890123"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Erreur : Livre non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Mettre à jour un livre",
+                "description": "Met à jour les informations d'un livre existant.",
+                "operationId": "cf6535a3185059974fb8baaf90b29eaf",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "description": "ID du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Livre Test"
+                                    },
+                                    "author": {
+                                        "type": "string",
+                                        "example": "Auteur Test"
+                                    },
+                                    "summary": {
+                                        "type": "string",
+                                        "example": "Description de test pour ce livre."
+                                    },
+                                    "isbn": {
+                                        "type": "string",
+                                        "example": "1234567890123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Succès : Livre mis à jour",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "title": {
+                                                    "type": "string",
+                                                    "example": "Livre Test"
+                                                },
+                                                "author": {
+                                                    "type": "string",
+                                                    "example": "Auteur Test"
+                                                },
+                                                "summary": {
+                                                    "type": "string",
+                                                    "example": "Description de test pour ce livre."
+                                                },
+                                                "isbn": {
+                                                    "type": "string",
+                                                    "example": "1234567890123"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Erreur : Non autorisé (Token manquant ou invalide)"
+                    },
+                    "404": {
+                        "description": "Erreur : Livre non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erreur : Données invalides (Validation)"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Books"
+                ],
+                "summary": "Supprimer un livre",
+                "description": "Supprime un livre de la base de données.",
+                "operationId": "59b4f85b4a4fe1e69af7004dce3d489f",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "default": "application/json"
+                        }
+                    },
+                    {
+                        "name": "book",
+                        "in": "path",
+                        "description": "ID du livre",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Succès : Livre supprimé (Aucun contenu retourné)"
+                    },
+                    "401": {
+                        "description": "Erreur : Non autorisé (Token manquant ou invalide)"
+                    },
+                    "404": {
+                        "description": "Erreur : Livre non trouvé",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            },
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "Token",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Books",
+            "description": "Books"
+        }
+    ]
+}

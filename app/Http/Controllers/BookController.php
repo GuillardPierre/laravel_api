@@ -7,11 +7,38 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
+use OpenApi\Annotations as OA;
 
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/books",
+     *     tags={"Books"},
+     *     summary="Liste des livres",
+     *     description="Récupère la liste paginée de tous les livres.",
+     *     @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string", default="application/json")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Succès : Liste des livres",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="title", type="string", example="Livre Test"),
+     *                 @OA\Property(property="author", type="string", example="Auteur Test"),
+     *                 @OA\Property(property="summary", type="string", example="Description de test pour ce livre."),
+     *                 @OA\Property(property="isbn", type="string", example="1234567890123")
+     *             )),
+     *             @OA\Property(property="meta", type="object"),
+     *             @OA\Property(property="links", type="object")
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -19,7 +46,50 @@ class BookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/books",
+     *     tags={"Books"},
+     *     summary="Créer un livre",
+     *     description="Ajoute un nouveau livre à la base de données.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string", default="application/json")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title", "author", "summary", "isbn"},
+     *             @OA\Property(property="title", type="string", example="Livre Test"),
+     *             @OA\Property(property="author", type="string", example="Auteur Test"),
+     *             @OA\Property(property="summary", type="string", example="Description de test pour ce livre."),
+     *             @OA\Property(property="isbn", type="string", example="1234567890123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Succès : Livre créé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="title", type="string", example="Livre Test"),
+     *                 @OA\Property(property="author", type="string", example="Auteur Test"),
+     *                 @OA\Property(property="summary", type="string", example="Description de test pour ce livre."),
+     *                 @OA\Property(property="isbn", type="string", example="1234567890123")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Erreur : Non autorisé (Token manquant ou invalide)",
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur : Données invalides (Validation)"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -36,7 +106,43 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/books/{book}",
+     *     tags={"Books"},
+     *     summary="Afficher un livre",
+     *     description="Récupère les informations d'un livre spécifique.",
+     *     @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string", default="application/json")
+     *     ),
+     *     @OA\Parameter(
+     *         name="book",
+     *         in="path",
+     *         required=true,
+     *         description="ID du livre",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Succès : Informations du livre",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="title", type="string", example="Livre Test"),
+     *                 @OA\Property(property="author", type="string", example="Auteur Test"),
+     *                 @OA\Property(property="summary", type="string", example="Description de test pour ce livre."),
+     *                 @OA\Property(property="isbn", type="string", example="1234567890123")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Erreur : Livre non trouvé",
+     *         @OA\JsonContent(@OA\Property(property="message", type="string", example="Not found"))
+     *     )
+     * )
      */
     public function show(Book $book)
     {
@@ -50,7 +156,61 @@ class BookController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/books/{book}",
+     *     tags={"Books"},
+     *     summary="Mettre à jour un livre",
+     *     description="Met à jour les informations d'un livre existant.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string", default="application/json")
+     *     ),
+     *     @OA\Parameter(
+     *         name="book",
+     *         in="path",
+     *         required=true,
+     *         description="ID du livre",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string", example="Livre Test"),
+     *             @OA\Property(property="author", type="string", example="Auteur Test"),
+     *             @OA\Property(property="summary", type="string", example="Description de test pour ce livre."),
+     *             @OA\Property(property="isbn", type="string", example="1234567890123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Succès : Livre mis à jour",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="title", type="string", example="Livre Test"),
+     *                 @OA\Property(property="author", type="string", example="Auteur Test"),
+     *                 @OA\Property(property="summary", type="string", example="Description de test pour ce livre."),
+     *                 @OA\Property(property="isbn", type="string", example="1234567890123")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Erreur : Non autorisé (Token manquant ou invalide)",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Erreur : Livre non trouvé",
+     *         @OA\JsonContent(@OA\Property(property="message", type="string", example="Not found"))
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erreur : Données invalides (Validation)"
+     *     )
+     * )
      */
     public function update(Request $request, Book $book)
     {
@@ -80,7 +240,39 @@ class BookController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/books/{book}",
+     *     tags={"Books"},
+     *     summary="Supprimer un livre",
+     *     description="Supprime un livre de la base de données.",
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="Accept",
+     *         in="header",
+     *         required=true,
+     *         @OA\Schema(type="string", default="application/json")
+     *     ),
+     *     @OA\Parameter(
+     *         name="book",
+     *         in="path",
+     *         required=true,
+     *         description="ID du livre",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Succès : Livre supprimé (Aucun contenu retourné)"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Erreur : Non autorisé (Token manquant ou invalide)",
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Erreur : Livre non trouvé",
+     *         @OA\JsonContent(@OA\Property(property="message", type="string", example="Not found"))
+     *     )
+     * )
      */
     public function destroy(Book $book)
     {
