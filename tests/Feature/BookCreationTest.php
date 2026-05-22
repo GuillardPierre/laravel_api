@@ -4,12 +4,11 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BookCreationTest extends TestCase
 {
-    use RefreshDatabase, WithFaker;
+    use RefreshDatabase;
 
     public function test_creates_book()
     {
@@ -49,7 +48,7 @@ class BookCreationTest extends TestCase
         $response->assertStatus(422);
 
         $this->assertDatabaseMissing('books', [
-            'title' => $payload['title'],
+            'title' => $payload['isbn'],
         ]);
     }
 
